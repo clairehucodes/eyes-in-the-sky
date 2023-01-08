@@ -1,0 +1,14 @@
+#make needed imports
+from picamera import PiCamera
+from time import sleep
+
+
+camera = PiCamera()
+
+#open cam and give 30 sec intervals between capture
+camera.start_preview()
+sleep(30)
+
+#replace file path
+camera.capture('/home/pi/Desktop/image.jpg')
+camera.stop_preview()
