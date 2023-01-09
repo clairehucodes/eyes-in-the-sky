@@ -1,6 +1,9 @@
 #make needed imports
 from picamera import PiCamera
 from time import sleep
+from twilio.rest import Client
+import cv2
+import numpy as np
 
 
 camera = PiCamera()
@@ -12,3 +15,101 @@ sleep(30)
 #replace file path
 camera.capture('/home/pi/Desktop/image.jpg')
 camera.stop_preview()
+
+#DETECT SKY CONTOURS
+def isolate_sky(image):
+  # Load the image and convert it to grayscale
+  img = cv2.imread(image)
+  gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+  # Invert the grayscale image
+  gray = cv2.bitwise_not(gray)
+
+  # Threshold the image to create a binary image
+  _, thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+
+  # Find the contours in the image
+  contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+  # Find the contour with the largest area
+  contour = max(contours, key=cv2.contourArea)
+
+  # Create a mask image with the same size as the original image
+  mask = np.zeros(img.shape[:2], np.uint8)
+
+  # Fill the mask with the contour
+  cv2.drawContours(mask, [contour], -1, (255, 255, 255), -1)
+
+  # Use the mask to isolate the sky in the original image
+  isolated_sky = cv2.bitwise_and(img, img, mask=mask)
+
+  return isolated_sky
+
+#save isolateds ky as a jpg
+cv2.imwrite('isolated_sky.jpg', isolated_sky)
+
+
+#LOOP AND FIND NUM OF PRETTY COLORS
+# Read the image file
+image = cv2.imread('image.jpg')
+
+# Convert the image to HSV color space
+hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+
+# Extract the H, S, and V channels
+h, s, v = cv2.split(hsv)
+
+# Set the lower and upper bounds for the colors we want to detect
+lower_red = np.array([0, 50, 70])
+upper_red = np.array([10, 255, 255])
+lower_yellow = np.array([20, 50, 70])
+upper_yellow = np.array([30, 255, 255])
+lower_magenta = np.array([300, 50, 30])
+upper_magenta = np.array([360, 255, 255])
+
+# Initialize counters for the number of red, yellow, and magenta pixels
+red_count = 0
+yellow_count = 0
+magenta_count = 0
+
+# Iterate over the image pixels
+for i in range(image.shape[0]):
+    for j in range(image.shape[1]):
+        # Get the H, S, and V values for the current pixel
+        h_val = h[i][j]
+        s_val = s[i][j]
+        v_val = v[i][j]
+        
+        # Check if the pixel is within the red range
+        if lower_red[0] <= h_val <= upper_red[0] and lower_red[1] <= s_val <= upper_red[1] and lower_red[2] <= v_val <= upper_red[2]:
+            red_count += 1
+        # Check if the pixel is within the yellow range
+        elif lower_yellow[0] <= h_val <= upper_yellow[0] and lower_yellow[1] <= s_val <= upper_yellow[1] and lower_yellow[2] <= v_val <= upper_yellow[2]:
+            yellow_count += 1
+        # Check if the pixel is within the magenta range
+        elif lower_magenta[0] <= h_val <= upper_magenta[0] and lower_magenta[1] <= s_val <= upper_magenta[1] and lower_magenta[2] <= v_val <= upper_magenta[2]:
+            magenta_count += 1
+
+# Print the counts
+print(f'Number of red pixels: {red_count}')
+print(f'Number of yellow pixels: {yellow_count}')
+print(f'Number of magenta pixels: {magenta_count}')
+
+#IF ABOVE THRESHOLD, SEND A TEXT
+# Check if the number of red pixels exceeds the threshold
+if red_count > 100 or yellow_count > 100 or magenta count > 100:
+    # Set up the Twilio API client
+    account_sid = 'your_twilio_account_sid'
+    auth_token = 'your_twilio_auth_token'
+    client = Client(account_sid, auth_token)
+
+    # Send the text message
+    message = client.messages \
+                    .create(
+                         body='There are more than 100 red pixels in the image!',
+                         from_='your_twilio_phone_number',
+                         to='your_phone_number'
+                     )
+    print(f'Sent message: {message.sid}')
+else:
+    print(f'No action now')
