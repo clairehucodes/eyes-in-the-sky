@@ -99,16 +99,16 @@ print(f'Number of magenta pixels: {magenta_count}')
 # Check if the number of red pixels exceeds the threshold
 if red_count > 100 or yellow_count > 100 or magenta count > 100:
     # Set up the Twilio API client
-    account_sid = 'your_twilio_account_sid'
-    auth_token = 'your_twilio_auth_token'
+    account_sid = 'AC90d2aec1b48d86aadca0ac3b5e4175b1'
+    auth_token = '755a80c9f33edb80adebedb3cae60d6e'
     client = Client(account_sid, auth_token)
 
     # Send the text message
     message = client.messages \
                     .create(
-                         body='There are more than 100 red pixels in the image!',
-                         from_='your_twilio_phone_number',
-                         to='your_phone_number'
+                         body='There are more than 100 red, yellow, or magenta pixels in the image!',
+                         from_='+13862603449',
+                         to='+15135387028'
                      )
     print(f'Sent message: {message.sid}')
 else:
