@@ -1,20 +1,21 @@
 #make needed imports
-from picamera import PiCamera
+#from picamera import PiCamera
 from time import sleep
 from twilio.rest import Client
 import cv2
 import numpy as np
 
-#STEP 1: CAPTURE PHOTO
-camera = PiCamera()
 
-#open cam and give 30 sec intervals between capture
-camera.start_preview()
-sleep(30)
+# #STEP 1: CAPTURE PHOTO
+# camera = PiCamera()
 
-#replace file path
-camera.capture('/home/pi/Desktop/image.jpg')
-camera.stop_preview()
+# #open cam and give 30 sec intervals between capture
+# camera.start_preview()
+# sleep(30)
+
+# #replace file path
+# camera.capture('/home/pi/Desktop/image.jpg')
+# camera.stop_preview()
 
 #STEP 2: DETECT SKY CONTOURS
 def isolate_sky(image):
@@ -45,16 +46,21 @@ def isolate_sky(image):
 
   return isolated_sky
 
-#save isolated sky as a jpg
+#test path
+path = r'/Users/clairehu/Documents/GitHub/eyes-in-the-sky/sunset-photo.png'
+image_before = cv2.imread(path)
+cv2.imshow('image before mask', image_before)
+
+
+isolated_sky = isolate_sky(path)
 cv2.imwrite('isolated_sky.jpg', isolated_sky)
+image_after = cv2.imread('isolated_sky.jpg')
+cv2.imshow('image after mask', image_after)
+
 
 #STEP 3: LOOP AND FIND NUM OF PRETTY COLORS
 # Read the image file
 
-#test path
-path = r'/Users/clairehu/Documents/GitHub/eyes-in-the-sky/sunset-photo.png'
-image = cv2.imread(path)
-cv2.imshow('image', img)
 
 #resize image here????
 #uncomment later to use isolated sky
