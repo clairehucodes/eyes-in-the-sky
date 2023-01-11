@@ -16,7 +16,7 @@ sleep(30)
 camera.capture('/home/pi/Desktop/image.jpg')
 camera.stop_preview()
 
-#DETECT SKY CONTOURS
+#STEP 2: DETECT SKY CONTOURS
 def isolate_sky(image):
   # Load the image and convert it to grayscale
   img = cv2.imread(image)
@@ -31,7 +31,7 @@ def isolate_sky(image):
   # Find the contours in the image
   contours, _ = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
-  # Find the contour with the largest area
+  # Find the contour with the largest area --> ask user to position camera where sky takes us majority of frame
   contour = max(contours, key=cv2.contourArea)
 
   # Create a mask image with the same size as the original image
@@ -48,10 +48,17 @@ def isolate_sky(image):
 #save isolated sky as a jpg
 cv2.imwrite('isolated_sky.jpg', isolated_sky)
 
-
-#LOOP AND FIND NUM OF PRETTY COLORS
+#STEP 3: LOOP AND FIND NUM OF PRETTY COLORS
 # Read the image file
-image = cv2.imread('isolated_sky.jpg')
+
+#test path
+path = r'/Users/clairehu/Documents/GitHub/eyes-in-the-sky/sunset-photo.png'
+image = cv2.imread(path)
+cv2.imshow('image', img)
+
+#resize image here????
+#uncomment later to use isolated sky
+#image = cv2.imread('isolated_sky.jpg')
 
 # Convert the image to HSV color space
 hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
@@ -95,9 +102,12 @@ print(f'Number of red pixels: {red_count}')
 print(f'Number of yellow pixels: {yellow_count}')
 print(f'Number of magenta pixels: {magenta_count}')
 
-#IF ABOVE THRESHOLD, SEND A TEXT
+#IF ABOVE THRESHOLD, SEND A TEXT VIA TWILIO API
+# replace placeholder # of 100 with something else
 # Check if the number of red pixels exceeds the threshold
 if red_count > 100 or yellow_count > 100 or magenta_count > 100:
+#trigger_colors = red_count + yellow_count + magenta_count
+#if trigger_colors > 1000:
     # Set up the Twilio API client
     account_sid = 'AC90d2aec1b48d86aadca0ac3b5e4175b1'
     auth_token = '755a80c9f33edb80adebedb3cae60d6e'
@@ -106,10 +116,10 @@ if red_count > 100 or yellow_count > 100 or magenta_count > 100:
     # Send the text message
     message = client.messages \
                     .create(
-                         body='There are more than 100 red, yellow, or magenta pixels in the image!',
+                         body='There are more than 100 red, yellow, or magenta pixels in the image! WAKE UP RIGHT NOW!',
                          from_='+13862603449',
                          to='+15135387028'
                      )
     print(f'Sent message: {message.sid}')
 else:
-    print(f'No action now')
+    print(f'No action needed')
