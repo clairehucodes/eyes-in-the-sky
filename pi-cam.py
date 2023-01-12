@@ -67,6 +67,7 @@ cv2.imshow('image after mask', image_after)
 #image = cv2.imread('isolated_sky.jpg'), CHANGE image_before to say image_after after we figure out step 2
 # Convert the image to HSV color space
 hsv = cv2.cvtColor(image_before, cv2.COLOR_BGR2HSV)
+cv2.imshow('image before mask', ia)
 
 # Extract the H, S, and V channels
 h, s, v = cv2.split(hsv)
@@ -74,7 +75,7 @@ h, s, v = cv2.split(hsv)
 # Set the lower and upper bounds for the colors we want to detect
 lower_red = np.array([0, 50, 70])
 upper_red = np.array([10, 255, 255])
-lower_yellow = np.array([20, 50, 70])
+lower_yellow = np.array([20, 50, 60])
 upper_yellow = np.array([30, 255, 255])
 lower_magenta = np.array([300, 50, 30])
 upper_magenta = np.array([360, 255, 255])
