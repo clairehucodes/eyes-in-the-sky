@@ -85,8 +85,8 @@ yellow_count = 0
 magenta_count = 0
 
 # Iterate over the image pixels
-for i in range(image.shape[0]):
-    for j in range(image.shape[1]):
+for i in range(image_before.shape[0]):
+    for j in range(image_before.shape[1]):
         # Get the H, S, and V values for the current pixel
         h_val = h[i][j]
         s_val = s[i][j]
