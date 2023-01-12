@@ -17,7 +17,7 @@ import numpy as np
 # camera.capture('/home/pi/Desktop/image.jpg')
 # camera.stop_preview()
 
-#STEP 2: DETECT SKY CONTOURS
+#STEP 2: DETECT SKY CONTOURS & SAVE AS ISOLATED IMAGE
 def isolate_sky(image):
   # Load the image and convert it to grayscale
   img = cv2.imread(image)
@@ -60,14 +60,13 @@ cv2.imshow('image after mask', image_after)
 
 #STEP 3: LOOP AND FIND NUM OF PRETTY COLORS
 # Read the image file
-
-
-#resize image here????
+# resize image here????
 #uncomment later to use isolated sky
-#image = cv2.imread('isolated_sky.jpg')
 
+
+#image = cv2.imread('isolated_sky.jpg'), CHANGE image_before to say image_after after we figure out step 2
 # Convert the image to HSV color space
-hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+hsv = cv2.cvtColor(image_before, cv2.COLOR_BGR2HSV)
 
 # Extract the H, S, and V channels
 h, s, v = cv2.split(hsv)
