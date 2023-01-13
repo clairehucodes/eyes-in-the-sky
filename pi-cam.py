@@ -92,7 +92,7 @@ print("Magenta pixels:", magenta_pixels)
 # replace placeholder # of 100 with something else
 # Check if the number of red pixels exceeds the threshold
 trigger_colors = yellow_pixels + magenta_pixels
-if trigger_colors > 1000:
+if trigger_colors > 7500:
     print('lots of  colors')
     # Set up the Twilio API client
     account_sid = 'AC90d2aec1b48d86aadca0ac3b5e4175b1'
@@ -102,10 +102,10 @@ if trigger_colors > 1000:
     # Send the text message
     message = client.messages \
                     .create(
-                         body='There are more than 100 red, yellow, or magenta pixels in the image! WAKE UP RIGHT NOW!',
+                         body='Put yo boots on... there are more than 7500 colorful pixels in the image! WAKE UP RIGHT NOW! WOWOWOWOWOWOWO!!!!',
                          from_='+13862603449',
                          to='+15135387028'
                      )
-    print(f'Sent message: {message.sid}')
+    print(f'Sent message to clay\'s phone: {message.sid}')
 else:
     print(f'No action needed')
