@@ -108,13 +108,11 @@ if trigger_colors > 7500:
                      )
     print(f'Sent message to clay\'s phone: {message.sid}')
 
-    # The URL of the ringtone you want to play
-    ringtone_url = 'https://drive.google.com/file/d/1sy6aXLn3_2bqr5SYdU6lNEuOIlwtyFrd/view?usp=share_link'
-
     call = client.calls.create(
     to='+15135387028',
-    from_='+13862603449',
-    url=ringtone_url)
+    from_='+13862603449')
+
     print('CALLIG!!')
+    
 else:
     print(f'No action needed')
