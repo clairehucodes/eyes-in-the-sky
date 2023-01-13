@@ -47,8 +47,8 @@ import numpy as np
 #   return isolated_sky
 
 # #test path
-# path = r'/Users/clairehu/Documents/GitHub/eyes-in-the-sky/sunset-photo.png'
-# image_before = cv2.imread(path)
+path = r'/Users/clairehu/Documents/GitHub/eyes-in-the-sky/sunset-photo.png'
+image_before = cv2.imread(path)
 # cv2.imshow('image before mask', image_before)
 
 
@@ -107,5 +107,14 @@ if trigger_colors > 7500:
                          to='+15135387028'
                      )
     print(f'Sent message to clay\'s phone: {message.sid}')
+
+    # The URL of the ringtone you want to play
+    ringtone_url = 'https://drive.google.com/file/d/1sy6aXLn3_2bqr5SYdU6lNEuOIlwtyFrd/view?usp=share_link'
+
+    call = client.calls.create(
+    to='+15135387028',
+    from_='+13862603449',
+    url=ringtone_url)
+    print('CALLIG!!')
 else:
     print(f'No action needed')
